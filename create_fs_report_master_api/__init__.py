@@ -83,23 +83,48 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
             )
 
         # 3. Parse request body
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            utils.f_log_audit_trail(
-                "ERROR", request_id, api_name, creator_user_id, timestamp,
-                {}, config.STATUS_INVALID_INPUT,
-                config.DESC_MSG0001, "Invalid JSON in request body"
-            )
-            return func.HttpResponse(
-                json.dumps({
-                    "status_code": config.STATUS_INVALID_INPUT,
-                    "status_description": config.DESC_MSG0001,
-                    "error_message": "Invalid JSON in request body"
-                }),
-                mimetype="application/json",
-                status_code=402
-            )
+        body_bytes = req.get_body()
+        if not body_bytes or body_bytes.strip() == b'':
+            # Fallback to reading from local file
+            import os
+            app_root = os.path.dirname(context.function_directory)
+            fallback_file = os.path.join(app_root, "fs_report_master.json")
+            try:
+                with open(fallback_file, "r", encoding="utf-8") as f:
+                    req_body = json.load(f)
+            except Exception as e:
+                utils.f_log_audit_trail(
+                    "ERROR", request_id, api_name, creator_user_id, timestamp,
+                    {}, config.STATUS_SYSTEM_EXCEPTION,
+                    config.DESC_MSG0004, f"Failed to load fallback file: {str(e)}"
+                )
+                return func.HttpResponse(
+                    json.dumps({
+                        "status_code": config.STATUS_SYSTEM_EXCEPTION,
+                        "status_description": config.DESC_MSG0004,
+                        "error_message": "Failed to load fallback file"
+                    }),
+                    mimetype="application/json",
+                    status_code=500
+                )
+        else:
+            try:
+                req_body = req.get_json()
+            except ValueError:
+                utils.f_log_audit_trail(
+                    "ERROR", request_id, api_name, creator_user_id, timestamp,
+                    {}, config.STATUS_INVALID_INPUT,
+                    config.DESC_MSG0001, "Invalid JSON in request body"
+                )
+                return func.HttpResponse(
+                    json.dumps({
+                        "status_code": config.STATUS_INVALID_INPUT,
+                        "status_description": config.DESC_MSG0001,
+                        "error_message": "Invalid JSON in request body"
+                    }),
+                    mimetype="application/json",
+                    status_code=402
+                )
 
         input_json = json.dumps(req_body)
 
