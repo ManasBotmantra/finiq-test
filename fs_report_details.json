@@ -1,0 +1,32 @@
+[
+  {
+    "tb_id": "86ef8e5d-16f3-4e4c-bdf6-7b2438902cd5",
+    "fs_type": "BS",
+    "fs_node_id": "a7942767-f4a4-4c8d-b0f3-8557b77f3e82",
+    "fs_node_name": "Assets",
+    "parent_fs_node_id": null,
+    "node_seq": 1,
+    "reporting_node_flag": false,
+    "balance": 1520445.97
+  },
+  {
+    "tb_id": "86ef8e5d-16f3-4e4c-bdf6-7b2438902cd5",
+    "fs_type": "BS",
+    "fs_node_id": "b0a2cd6e-f78a-4c28-ae71-92cb1f238ab3",
+    "fs_node_name": "Current Assets",
+    "parent_fs_node_id": "a7942767-f4a4-4c8d-b0f3-8557b77f3e82",
+    "node_seq": 2,
+    "reporting_node_flag": false,
+    "balance": 1200445.97
+  },
+  {
+    "tb_id": "86ef8e5d-16f3-4e4c-bdf6-7b2438902cd5",
+    "fs_type": "BS",
+    "fs_node_id": "e938dae4-18ef-4171-8bc4-726ef39f8cc1",
+    "fs_node_name": "Cash & Bank",
+    "parent_fs_node_id": "b0a2cd6e-f78a-4c28-ae71-92cb1f238ab3",
+    "node_seq": 3,
+    "reporting_node_flag": true,
+    "balance": 850000.00
+  }
+]
